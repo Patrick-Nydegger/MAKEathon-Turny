@@ -1,30 +1,51 @@
 # SRC/ProcessTracker.py
 
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 import datetime
+import os
 
 # Define the SQLite database URL
 DATABASE_URL = "sqlite:///process_tracker.db"
 
+# Remove existing database file if needed (optional)
+if os.path.exists("process_tracker.db"):
+    os.remove("process_tracker.db")
+
 # Create the database engine
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL, echo=False)
 
 # Create a base class for declarative class definitions
 Base = declarative_base()
 
 
-# Define the Process model
-class Process(Base):
-    __tablename__ = 'processes'
+# Define the ProcessType model (corresponds to ProcessType table)
+class ProcessType(Base):
+    __tablename__ = 'process_type'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    status = Column(String, nullable=False, default="not_started")
-    start_time = Column(DateTime)
-    end_time = Column(DateTime)
-    is_active = Column(Boolean, default=False)
+    ProcessTypeID = Column(Integer, primary_key=True, autoincrement=True)
+    Name = Column(String(50), nullable=False)
+    Description = Column(String)
+
+    # Relationship with Operation
+    operations = relationship("Operation", back_populates="process_type")
+
+
+# Define the Operation model (corresponds to Operation table)
+class Operation(Base):
+    __tablename__ = 'operation'
+
+    OperationID = Column(Integer, primary_key=True, autoincrement=True)
+    ProcessTypeID = Column(Integer, ForeignKey('process_type.ProcessTypeID'), nullable=False)
+    FlightID = Column(Integer)  # Assuming FlightID is not used in this context
+    StartTime = Column(DateTime, nullable=True)  # Allow NULL initially
+    EndTime = Column(DateTime, nullable=True)    # Allow NULL initially
+    Status = Column(String(20), default='Scheduled')
+    Notes = Column(String)
+
+    # Relationship with ProcessType
+    process_type = relationship("ProcessType", back_populates="operations")
 
 
 # Create the database tables
@@ -34,71 +55,86 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
 
-def add_process(session, name):
-    """Adds a new process to the database."""
-    new_process = Process(
-        name=name,
-        status="not_started"
-    )
-    session.add(new_process)
+def add_process_type(session, name, description):
+    """Adds a new process type to the database."""
+    process_type = ProcessType(Name=name, Description=description)
+    session.add(process_type)
     session.commit()
-    print(f"Process '{name}' added to the tracker.")
+    print(f"ProcessType '{name}' added to the tracker.")
 
 
-def start_process(session, name):
-    """Marks a process as started with a timestamp."""
-    process = session.query(Process).filter_by(name=name, status="not_started").first()
-    if process:
-        process.status = "in_progress"
-        process.start_time = datetime.datetime.utcnow()
-        process.is_active = True
+def add_operation(session, process_type_name):
+    """Adds a new operation for a given process type."""
+    process_type = session.query(ProcessType).filter_by(Name=process_type_name).first()
+    if not process_type:
+        print(f"ProcessType '{process_type_name}' does not exist.")
+        return
+
+    operation = Operation(
+        ProcessTypeID=process_type.ProcessTypeID,
+        StartTime=None,  # StartTime will be set when the operation starts
+        EndTime=None,    # EndTime will be set when the operation completes
+        Status='not_started'
+    )
+    session.add(operation)
+    session.commit()
+    print(f"Operation for '{process_type_name}' added to the tracker.")
+
+
+def start_operation(session, process_type_name):
+    """Marks an operation as started with a timestamp."""
+    process_type = session.query(ProcessType).filter_by(Name=process_type_name).first()
+    if not process_type:
+        print(f"ProcessType '{process_type_name}' does not exist.")
+        return
+
+    operation = session.query(Operation).filter_by(ProcessTypeID=process_type.ProcessTypeID, Status='not_started').first()
+    if operation:
+        operation.Status = 'in_progress'
+        operation.StartTime = datetime.datetime.utcnow()
         session.commit()
-        print(f"Process '{name}' started at {process.start_time}")
+        print(f"Operation '{process_type_name}' started at {operation.StartTime}")
     else:
-        print(f"Process '{name}' is already started or does not exist.")
+        print(f"No 'not_started' operation found for '{process_type_name}'.")
 
 
-def complete_process(session, name):
-    """Marks a process as completed with a timestamp."""
-    process = session.query(Process).filter_by(name=name, status="in_progress").first()
-    if process:
-        process.status = "completed"
-        process.end_time = datetime.datetime.utcnow()
-        process.is_active = False
+def complete_operation(session, process_type_name):
+    """Marks an operation as completed with a timestamp."""
+    process_type = session.query(ProcessType).filter_by(Name=process_type_name).first()
+    if not process_type:
+        print(f"ProcessType '{process_type_name}' does not exist.")
+        return
+
+    operation = session.query(Operation).filter_by(ProcessTypeID=process_type.ProcessTypeID, Status='in_progress').first()
+    if operation:
+        operation.Status = 'completed'
+        operation.EndTime = datetime.datetime.utcnow()
         session.commit()
-        print(f"Process '{name}' completed at {process.end_time}")
+        print(f"Operation '{process_type_name}' completed at {operation.EndTime}")
     else:
-        print(f"Process '{name}' is not in progress or does not exist.")
+        print(f"No 'in_progress' operation found for '{process_type_name}'.")
 
 
-def all_processes_finished(session):
-    """Checks if all processes are marked as completed in the database."""
-    processes = session.query(Process).all()
-    return all(process.status == 'completed' for process in processes)
+def all_operations_finished(session):
+    """Checks if all operations are marked as completed in the database."""
+    operations = session.query(Operation).all()
+    return all(operation.Status == 'completed' for operation in operations)
 
 
-def check_area_clear():
-    """Simulates a check for area clearance (to be replaced with YOLOv8 integration)."""
-    print("Checking if the area around the airplane is clear...")
-    return input("Is the area around the airplane clear (yes/no)? ").lower() == 'yes'
+def get_all_operations(session):
+    """Fetches all operations from the database."""
+    return session.query(Operation).all()
 
 
-def allow_pushback(session):
-    """Determines if pushback is allowed based on process completion and area clearance."""
-    if all_processes_finished(session) and check_area_clear():
-        print("All processes are complete and the area is clear. Green light for pushback!")
-    else:
-        print("Pushback not allowed. Some processes are incomplete or the area is not clear.")
-
-
-def initialize_default_processes(session):
-    """Initializes the default processes for an airplane turnaround."""
-    add_process(session, "Catering")
-    add_process(session, "Refueling")
-    add_process(session, "Unloading & Loading")
-    add_process(session, "Walk Around")
-
-
-def get_all_processes(session):
-    """Fetches all processes from the database."""
-    return session.query(Process).all()
+def initialize_default_process_types(session):
+    """Initializes the default process types and their operations."""
+    default_processes = [
+        ("Catering", "Providing food and beverages for the flight"),
+        ("Refueling", "Refueling the airplane"),
+        ("Unloading", "Unloading cargo and luggage"),
+        ("Loading", "Loading cargo and luggage"),
+        ("Walk Around", "Safety inspection of the airplane")
+    ]
+    for name, description in default_processes:
+        add_process_type(session, name, description)
+        add_operation(session, name)

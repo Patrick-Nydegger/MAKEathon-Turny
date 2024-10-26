@@ -2,71 +2,60 @@
 
 from ProcessTracker import (
     Session,
-    initialize_default_processes,
-    start_process,
-    complete_process,
-    allow_pushback,
-    get_all_processes
+    initialize_default_process_types,
+    start_operation,
+    complete_operation,
+    get_all_operations
 )
+import time
 
 
-def display_processes(session):
-    """Helper function to display all processes in the database."""
-    processes = get_all_processes(session)
-    print("\nCurrent state of processes:")
-    for process in processes:
-        print(f"ID: {process.id}, Name: {process.name}, Status: {process.status}, "
-              f"Start Time: {process.start_time}, End Time: {process.end_time}")
+def display_operations(session):
+    """Helper function to display all operations in the database."""
+    operations = get_all_operations(session)
+    print("\nCurrent state of operations:")
+    for operation in operations:
+        process_name = operation.process_type.Name
+        start_time = operation.StartTime.strftime("%Y-%m-%d %H:%M:%S") if operation.StartTime else "Not Started"
+        end_time = operation.EndTime.strftime("%Y-%m-%d %H:%M:%S") if operation.EndTime else "Not Completed"
+        print(f"OperationID: {operation.OperationID}, ProcessType: {process_name}, Status: {operation.Status}, "
+              f"Start Time: {start_time}, End Time: {end_time}")
     print("\n")
+
+
+def simulate_process(session, process_name, duration_seconds=2):
+    """Simulates starting and completing a process with a given duration."""
+    print(f"Starting '{process_name}' operation...")
+    start_operation(session, process_name)
+    display_operations(session)
+
+    # Simulate the duration of the process
+    time.sleep(duration_seconds)
+
+    print(f"Completing '{process_name}' operation...")
+    complete_operation(session, process_name)
+    display_operations(session)
 
 
 def main():
     # Initialize the database session
     session = Session()
 
-    print("Initializing default processes...")
-    initialize_default_processes(session)
-    display_processes(session)
+    # Initialize default process types and add corresponding operations
+    print("Initializing default process types and operations...")
+    initialize_default_process_types(session)
+    display_operations(session)
 
-    # Simulate starting and completing each process
-    print("Starting 'Refueling' process...")
-    start_process(session, "Refueling")
-    display_processes(session)
+    # List of processes to simulate
+    processes = ["Refueling", "Catering", "Unloading", "Loading", "Walk Around"]
 
-    print("Completing 'Refueling' process...")
-    complete_process(session, "Refueling")
-    display_processes(session)
+    # Simulate each process happening once
+    for process_name in processes:
+        simulate_process(session, process_name, duration_seconds=1)
 
-    print("Starting 'Catering' process...")
-    start_process(session, "Catering")
-    display_processes(session)
-
-    print("Completing 'Catering' process...")
-    complete_process(session, "Catering")
-    display_processes(session)
-
-    print("Starting 'Unloading & Loading' process...")
-    start_process(session, "Unloading & Loading")
-    display_processes(session)
-
-    print("Completing 'Unloading & Loading' process...")
-    complete_process(session, "Unloading & Loading")
-    display_processes(session)
-
-    print("Starting 'Walk Around' process...")
-    start_process(session, "Walk Around")
-    display_processes(session)
-
-    print("Completing 'Walk Around' process...")
-    complete_process(session, "Walk Around")
-    display_processes(session)
-
-    # Check if pushback is allowed
-    print("Checking if pushback is allowed...")
-    allow_pushback(session)
-
-    # Final display of the process states
-    display_processes(session)
+    # Final display of the operation states
+    print("Final state of all operations after simulation:")
+    display_operations(session)
 
     # Close the session when done
     session.close()
