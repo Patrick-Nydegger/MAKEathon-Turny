@@ -9,6 +9,7 @@ from ProcessTracker import (
     get_all_processes
 )
 
+
 def display_processes(session):
     """Helper function to display all processes in the database."""
     processes = get_all_processes(session)
@@ -17,6 +18,7 @@ def display_processes(session):
         print(f"ID: {process.id}, Name: {process.name}, Status: {process.status}, "
               f"Start Time: {process.start_time}, End Time: {process.end_time}")
     print("\n")
+
 
 def main():
     # Initialize the database session

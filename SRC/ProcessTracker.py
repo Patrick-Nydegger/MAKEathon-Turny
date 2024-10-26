@@ -26,11 +26,13 @@ class Process(Base):
     end_time = Column(DateTime)
     is_active = Column(Boolean, default=False)
 
+
 # Create the database tables
 Base.metadata.create_all(engine)
 
 # Create a session factory
 Session = sessionmaker(bind=engine)
+
 
 def add_process(session, name):
     """Adds a new process to the database."""
@@ -41,6 +43,7 @@ def add_process(session, name):
     session.add(new_process)
     session.commit()
     print(f"Process '{name}' added to the tracker.")
+
 
 def start_process(session, name):
     """Marks a process as started with a timestamp."""
@@ -54,6 +57,7 @@ def start_process(session, name):
     else:
         print(f"Process '{name}' is already started or does not exist.")
 
+
 def complete_process(session, name):
     """Marks a process as completed with a timestamp."""
     process = session.query(Process).filter_by(name=name, status="in_progress").first()
@@ -66,15 +70,18 @@ def complete_process(session, name):
     else:
         print(f"Process '{name}' is not in progress or does not exist.")
 
+
 def all_processes_finished(session):
     """Checks if all processes are marked as completed in the database."""
     processes = session.query(Process).all()
     return all(process.status == 'completed' for process in processes)
 
+
 def check_area_clear():
     """Simulates a check for area clearance (to be replaced with YOLOv8 integration)."""
     print("Checking if the area around the airplane is clear...")
     return input("Is the area around the airplane clear (yes/no)? ").lower() == 'yes'
+
 
 def allow_pushback(session):
     """Determines if pushback is allowed based on process completion and area clearance."""
@@ -83,12 +90,14 @@ def allow_pushback(session):
     else:
         print("Pushback not allowed. Some processes are incomplete or the area is not clear.")
 
+
 def initialize_default_processes(session):
     """Initializes the default processes for an airplane turnaround."""
     add_process(session, "Catering")
     add_process(session, "Refueling")
     add_process(session, "Unloading & Loading")
     add_process(session, "Walk Around")
+
 
 def get_all_processes(session):
     """Fetches all processes from the database."""
