@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.fhnw.ch/turny/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://www.fhnw.ch/turny/"
+     versionIRI="http://www.fhnw.ch/turny/">
+    <Prefix name="" IRI="http://www.fhnw.ch/turny//"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Prefix name="Turny" IRI="https://www.Turny#"/>
+    <Declaration>
+        <Class IRI="/Aircraft"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/Equipment"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/Human"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/Luggage_Car"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/OperationStage"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/Passenger"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/Service"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/StaffMember"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/TimeSlot"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/TurnaroundProcess"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="/tanker"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="/assignetToAircraft"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="/boardsPassenger"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="/hasService"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="/hasSubProcess"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="/hasTimeSlot"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="/involvesStaff"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="/requiresEquipment"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="/hasEndTime"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="/hasName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="/hasQuantity"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="/hasStartTime"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="/isCompleted"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="/Aircraft_A320"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="/Arrival"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="/Baggage_Truck1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="/Cleaning_Team1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="/Fueling"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="/Passenger_Group1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="/Technician_Tom"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="/TimeSlot_Morning"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="/Turnaround_T1"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="/Luggage_Car"/>
+        <Class IRI="/Equipment"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="/Passenger"/>
+        <Class IRI="/Human"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="/StaffMember"/>
+        <Class IRI="/Human"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="/tanker"/>
+        <Class IRI="/Equipment"/>
+    </SubClassOf>
+    <ClassAssertion>
+        <Class IRI="/Aircraft"/>
+        <NamedIndividual IRI="/Aircraft_A320"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="/OperationStage"/>
+        <NamedIndividual IRI="/Arrival"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="/Luggage_Car"/>
+        <NamedIndividual IRI="/Baggage_Truck1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="/StaffMember"/>
+        <NamedIndividual IRI="/Cleaning_Team1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="/Service"/>
+        <NamedIndividual IRI="/Fueling"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="/Passenger"/>
+        <NamedIndividual IRI="/Passenger_Group1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="/StaffMember"/>
+        <NamedIndividual IRI="/Technician_Tom"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="/TimeSlot"/>
+        <NamedIndividual IRI="/TimeSlot_Morning"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="/TurnaroundProcess"/>
+        <NamedIndividual IRI="/Turnaround_T1"/>
+    </ClassAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="/hasName"/>
+        <NamedIndividual IRI="/Aircraft_A320"/>
+        <Literal></Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="/hasEndTime"/>
+        <NamedIndividual IRI="/Arrival"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#dateTime"></Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="/hasStartTime"/>
+        <NamedIndividual IRI="/Arrival"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#dateTime"></Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="/isCompleted"/>
+        <NamedIndividual IRI="/Arrival"/>
+        <Literal></Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="/isCompleted"/>
+        <NamedIndividual IRI="/Fueling"/>
+        <Literal></Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="/hasQuantity"/>
+        <NamedIndividual IRI="/Passenger_Group1"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer"></Literal>
+    </DataPropertyAssertion>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="/assignetToAircraft"/>
+        <Class IRI="/TurnaroundProcess"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="/boardsPassenger"/>
+        <Class IRI="/OperationStage"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="/hasService"/>
+        <Class IRI="/OperationStage"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="/hasSubProcess"/>
+        <Class IRI="/TurnaroundProcess"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="/hasTimeSlot"/>
+        <Class IRI="/OperationStage"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="/involvesStaff"/>
+        <Class IRI="/OperationStage"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="/requiresEquipment"/>
+        <Class IRI="/OperationStage"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="/assignetToAircraft"/>
+        <Class IRI="/Aircraft"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="/boardsPassenger"/>
+        <Class IRI="/Passenger"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="/hasService"/>
+        <Class IRI="/Service"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="/hasSubProcess"/>
+        <Class IRI="/OperationStage"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="/hasTimeSlot"/>
+        <Class IRI="/TimeSlot"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="/involvesStaff"/>
+        <Class IRI="/StaffMember"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="/requiresEquipment"/>
+        <Class IRI="/Equipment"/>
+    </ObjectPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="/hasEndTime"/>
+        <Datatype abbreviatedIRI="xsd:dateTime"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="/hasName"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="/hasQuantity"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="/hasStartTime"/>
+        <Datatype abbreviatedIRI="xsd:dateTime"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="/isCompleted"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+
